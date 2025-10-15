@@ -1,0 +1,354 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #e3efff;
+  border-bottom: 1px solid #c7dcff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.header .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  text-decoration: none;
+  color: #0f172a;
+}
+.breadcrumbs {
+  color: #475569;
+  font-size: 14px;
+}
+.cart {
+  margin-left: auto;
+  font-weight: 600;
+}
+.search-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0;
+}
+.search-bar input {
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  min-width: 260px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.card {
+  background: #f6fbf7;
+  border: 1px solid #dce7dc;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.1s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+.card img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+.card .title {
+  font-weight: 600;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.box {
+  background: #f7fbf7;
+  border: 1px solid #dce7dc;
+  border-radius: 12px;
+  padding: 16px;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.selects {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+select,
+button {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+}
+button.primary {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: white;
+  font-weight: 600;
+}
+.badge {
+  display: inline-flex;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid #94a3b8;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.pagination button {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.pagination button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.page-status {
+  font-weight: 600;
+  color: #334155;
+}
+.back-container {
+  margin-bottom: 16px;
+}
+
+.back-btn {
+  display: inline-block;
+  background-color: #2563eb;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Layout base (escritorio se mantiene) */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Columna izq (imagen) y der (detalles+acciones) en escritorio */
+@media (min-width: 769px) {
+  .row > div:first-child {
+    flex: 0 0 440px; /* ancho fijo aprox para la imagen */
+  }
+  .row > div:last-child {
+    flex: 1; /* detalles + acciones ocupan el resto */
+  }
+}
+
+/* ----- Móvil ----- */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column; /* Apila en el orden actual: imagen -> detalles -> acciones */
+    gap: 12px;
+  }
+
+  /* Botón volver: que quede bien visible y con toque cómodo */
+  .back-container {
+    padding: 8px 0 12px;
+  }
+  .back-btn {
+    display: inline-block;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: 600;
+  }
+
+  /* Cajas a ancho completo y sin márgenes raros */
+  .box {
+    width: 100%;
+  }
+
+  /* Imagen centrada y fluida */
+  .box img {
+    display: block;
+    margin: 0 auto;
+    height: auto;
+    max-width: 100%; /* en móvil ocupa el ancho disponible */
+  }
+
+  /* Selectores en columna y a 100% */
+  .actions .selects {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .actions .selects label,
+  .actions .selects select,
+  .actions .primary {
+    width: 100%;
+  }
+
+  /* Espaciado entre info y acciones para que respiren en móvil */
+  .actions {
+    margin-top: 8px;
+  }
+}
+/* --- Layout general --- */
+.product-list {
+  padding: 24px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
+}
+
+/* --- Paginación --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 28px 0 12px;
+  flex-wrap: wrap;
+}
+
+/* Botones base */
+.pagination button {
+  border: none;
+  background: #fff;
+  color: #333;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.pagination button:hover:not(:disabled) {
+  background: #f9f9f9;
+  transform: translateY(-2px);
+}
+
+/* Activo (color de marca) */
+.pagination .page-btn.active {
+  background: #ff2b5d;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(255, 43, 93, 0.4);
+}
+
+/* Flechas */
+.pagination .nav-btn {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 8px 10px;
+}
+
+/* Deshabilitado */
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .pagination button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
+/* Elemento clonado que "vuela" */
+.flyer {
+  position: fixed;
+  z-index: 9999;
+  border-radius: 12px;
+  pointer-events: none;
+  transition: transform 700ms cubic-bezier(.2,.8,.2,1), 
+              opacity 700ms ease, 
+              filter 700ms ease;
+  will-change: transform, opacity, filter;
+}
+
+/* Rebotico del contador */
+.cart-count.bump {
+  animation: cart-bump 300ms ease-out;
+}
+
+@keyframes cart-bump {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Destello breve en el icono de carrito */
+.cart-icon.flash {
+  animation: cart-flash 300ms ease-out;
+}
+@keyframes cart-flash {
+  0% { filter: drop-shadow(0 0 0 rgba(255,43,93,0)); }
+  50% { filter: drop-shadow(0 0 8px rgba(255,43,93,.7)); }
+  100% { filter: drop-shadow(0 0 0 rgba(255,43,93,0)); }
+}
