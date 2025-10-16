@@ -14,6 +14,25 @@ function currency(n = 0) {
   }
 }
 
+// Diccionario simple de colores comunes (extiende si quieres)
+const COLOR_MAP = {
+  red: "#FF0000",
+  rojo: "#FF0000",
+  black: "#000000",
+  negro: "#000000",
+  white: "#FFFFFF",
+  blanco: "#FFFFFF",
+  blue: "#007BFF",
+  azul: "#007BFF",
+  green: "#28A745",
+  verde: "#28A745",
+  gray: "#808080",
+  gris: "#808080",
+  gold: "#D4AF37",
+  silver: "#C0C0C0",
+  "space gray": "#4A4A4A",
+};
+
 export default function ShowCart({ open, onClose }) {
   const { items, clearAll } = useCart();
 
@@ -51,28 +70,6 @@ export default function ShowCart({ open, onClose }) {
 
     // 2️⃣ normaliza texto (sin tildes, lowercase)
     const key = normalizeColorKey(val);
-
-    // 3️⃣ busca en mapa extendido
-    const COLOR_MAP = {
-      red: "#FF0000",
-      rojo: "#FF0000",
-      black: "#000000",
-      negro: "#000000",
-      white: "#FFFFFF",
-      blanco: "#FFFFFF",
-      blue: "#007BFF",
-      azul: "#007BFF",
-      green: "#28A745",
-      verde: "#28A745",
-      gray: "#808080",
-      gris: "#808080",
-      "space gray": "#4A4A4A",
-      "gris oscuro": "#4A4A4A",
-      silver: "#C0C0C0",
-      plata: "#C0C0C0",
-      gold: "#D4AF37",
-      dorado: "#D4AF37",
-    };
 
     // 4️⃣ si encuentra coincidencia
     if (COLOR_MAP[key]) return COLOR_MAP[key];
