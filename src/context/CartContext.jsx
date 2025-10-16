@@ -38,6 +38,8 @@ function readItems() {
         Number.isFinite(Number(it.count)) && Number(it.count) > 0
           ? Number(it.count)
           : 1,
+      storageName: String(it.storageName ?? ""),
+      colorName: String(it.colorName ?? ""),
     }));
   } catch {
     return [];
@@ -114,6 +116,8 @@ export function CartProvider({ children }) {
         colorCode: String(summary.colorCode ?? ""),
         storageCode: String(summary.storageCode ?? ""),
         count: Number(summary.count) > 0 ? Number(summary.count) : 1,
+        storageName: String(summary.storageName ?? ""), // ✅ conservar
+        colorName: String(summary.colorName ?? ""),
       };
 
       const idx = prev.findIndex((p) => sameProduct(p, normalized));

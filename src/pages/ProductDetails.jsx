@@ -102,6 +102,10 @@ export default function ProductDetails() {
       showErrorToast("Selecciona color y almacenamiento");
       return;
     }
+    const colorObj = (item.options?.colors || []).find((c) => c.code === color);
+    const storageObj = (item.options?.storages || []).find(
+      (s) => s.code === capacity
+    );
 
     try {
       const res = await addToCart({
@@ -125,6 +129,8 @@ export default function ProductDetails() {
           item.imgUrl ||
           item.image ||
           "https://via.placeholder.com/400x300?text=Phone",
+        colorName: colorObj?.name ?? color ?? "",
+        storageName: storageObj?.name ?? capacity ?? "",
         // count: 1 // opcional; por defecto 1
       });
 

@@ -14,18 +14,96 @@ function currency(n = 0) {
   }
 }
 
+// Diccionario simple de colores comunes (extiende si quieres)
+const COLOR_MAP = {
+  red: "#FF0000",
+  rojo: "#FF0000",
+  black: "#000000",
+  negro: "#000000",
+  white: "#FFFFFF",
+  blanco: "#FFFFFF",
+  blue: "#007BFF",
+  azul: "#007BFF",
+  green: "#28A745",
+  verde: "#28A745",
+  gray: "#808080",
+  gris: "#808080",
+  gold: "#D4AF37",
+  silver: "#C0C0C0",
+  "space gray": "#4A4A4A",
+};
+
 export default function ShowCart({ open, onClose }) {
-  const { items, clearAll } = useCart(); // ⬅️ usa clearAll
+  const { items, clearAll } = useCart();
 
   const handleClear = () => {
     if (items.length === 0) return;
     const ok = window.confirm("¿Seguro que quieres vaciar el carrito?");
     if (!ok) return;
-    clearAll(); // limpia estado y borra claves de localStorage
+    clearAll();
     onClose?.();
   };
 
-  // total opcional
+  // Detecta si un valor es un color CSS válido
+  const isCssColor = (value) => {
+    if (!value) return false;
+    const s = document.createElement("span").style;
+    s.backgroundColor = "";
+    s.backgroundColor = value;
+    return s.backgroundColor !== "";
+  };
+
+  // util: quitar tildes y normalizar texto
+  const normalizeColorKey = (str = "") =>
+    str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // quita acentos
+      .toLowerCase()
+      .trim();
+
+  // obtiene el color real, incluso si viene con tildes o espacios
+  const resolveColor = (item) => {
+    const val = item?.colorCode || item?.colorName || ""; // usa cualquiera disponible
+
+    // 1️⃣ si ya es un color CSS válido (#fff, rgb(), etc.)
+    if (isCssColor(val)) return val;
+
+    // 2️⃣ normaliza texto (sin tildes, lowercase)
+    const key = normalizeColorKey(val);
+
+    // 3️⃣ busca en mapa extendido
+    const COLOR_MAP = {
+      red: "#FF0000",
+      rojo: "#FF0000",
+      black: "#000000",
+      negro: "#000000",
+      white: "#FFFFFF",
+      blanco: "#FFFFFF",
+      blue: "#007BFF",
+      azul: "#007BFF",
+      green: "#28A745",
+      verde: "#28A745",
+      gray: "#808080",
+      gris: "#808080",
+      "space gray": "#4A4A4A",
+      "gris oscuro": "#4A4A4A",
+      silver: "#C0C0C0",
+      plata: "#C0C0C0",
+      gold: "#D4AF37",
+      dorado: "#D4AF37",
+    };
+
+    // 4️⃣ si encuentra coincidencia
+    if (COLOR_MAP[key]) return COLOR_MAP[key];
+
+    // 5️⃣ si tiene palabra "gray" o "gris" en el texto
+    if (/gris|gray/.test(key)) return "#808080";
+
+    // 6️⃣ fallback
+    return "#ccc";
+  };
+
+  // Total general
   const total = useMemo(
     () =>
       items.reduce(
@@ -34,7 +112,7 @@ export default function ShowCart({ open, onClose }) {
       ),
     [items]
   );
-  // Portal a body para que se superponga siempre
+
   return createPortal(
     <>
       {/* Overlay */}
@@ -74,7 +152,7 @@ export default function ShowCart({ open, onClose }) {
           flexDirection: "column",
         }}
       >
-        {/* Header panel */}
+        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -144,10 +222,44 @@ export default function ShowCart({ open, onClose }) {
                     >
                       {it.name} {it.model}
                     </div>
+
+                    {/* Color */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginTop: 4,
+                      }}
+                    >
+                      <span
+                        title={it.colorName || it.colorCode}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: 4,
+                          backgroundColor: resolveColor(it),
+                          border: "1px solid rgba(0,0,0,0.15)",
+                          display: "inline-block",
+                        }}
+                      />
+                      <span style={{ color: "#555", fontSize: 13 }}>
+                        {it.colorName || it.colorCode}
+                      </span>
+                    </div>
+
+                    {/* Capacidad */}
+                    <div style={{ color: "#777", fontSize: 13 }}>
+                      {it.storageName || it.storageCode}
+                    </div>
+
+                    {/* Cantidad */}
                     <div style={{ color: "#666", fontSize: 13 }}>
                       x{it.count || 1}
                     </div>
                   </div>
+
+                  {/* Precio */}
                   <div style={{ textAlign: "right" }}>
                     <div style={{ fontWeight: 600, whiteSpace: "nowrap" }}>
                       {currency(it.price)}
@@ -159,22 +271,13 @@ export default function ShowCart({ open, onClose }) {
                       )}
                     </div>
                   </div>
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      whiteSpace: "nowrap",
-                      marginLeft: 8,
-                    }}
-                  >
-                    {currency(it.price)}
-                  </div>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        {/* Footer con total + Vaciar */}
+        {/* Footer */}
         <div
           style={{
             padding: "12px 16px",
@@ -210,7 +313,7 @@ export default function ShowCart({ open, onClose }) {
         </div>
       </aside>
 
-      {/* Responsive: 90% en móvil */}
+      {/* Responsive */}
       <style>{`
         @media (max-width: 768px) {
           aside[role="dialog"] {
