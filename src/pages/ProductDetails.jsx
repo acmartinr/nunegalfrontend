@@ -100,9 +100,12 @@ export default function ProductDetails() {
       showErrorToast("Selecciona color y almacenamiento");
       return;
     }
-    const colorObj = (item.options?.colors || []).find((c) => c.code === color);
+
+    const colorObj = (item.options?.colors || []).find(
+      (c) => String(c.code) === String(color)
+    );
     const storageObj = (item.options?.storages || []).find(
-      (s) => s.code === capacity
+      (s) => String(s.code) === String(capacity)
     );
 
     try {
