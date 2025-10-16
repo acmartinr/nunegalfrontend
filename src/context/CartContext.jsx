@@ -62,14 +62,18 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, String(count));
-    } catch {}
+    } catch {
+      /* ignore localStorage errors */
+    }
   }, [count]);
 
   // Guarda items
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_ITEMS_KEY, JSON.stringify(items));
-    } catch {}
+    } catch {
+      /* ignore localStorage errors */
+    }
   }, [items]);
 
   // Sincroniza otras pestañas/ventanas
@@ -83,7 +87,9 @@ export function CartProvider({ children }) {
         try {
           const arr = JSON.parse(e.newValue);
           if (Array.isArray(arr)) setItems(arr);
-        } catch {}
+        } catch {
+          /* ignore localStorage errors */
+        }
       }
     };
     window.addEventListener("storage", onStorage);
@@ -193,7 +199,9 @@ export function CartProvider({ children }) {
     try {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STORAGE_ITEMS_KEY);
-    } catch {}
+    } catch {
+      /* ignore localStorage errors */
+    }
     setCount(0);
     setItems([]);
   }, []);

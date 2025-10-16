@@ -23,7 +23,9 @@ function readLS(key) {
 
 function writeLS(key, obj) {
     if (!LS_OK) return;
-    try { localStorage.setItem(key, JSON.stringify(obj)); } catch { }
+    try { localStorage.setItem(key, JSON.sstringify(obj)); } catch {
+        /* ignore localStorage errors */
+    }
 }
 
 export function cacheGet(key) {

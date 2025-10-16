@@ -14,25 +14,6 @@ function currency(n = 0) {
   }
 }
 
-// Diccionario simple de colores comunes (extiende si quieres)
-const COLOR_MAP = {
-  red: "#FF0000",
-  rojo: "#FF0000",
-  black: "#000000",
-  negro: "#000000",
-  white: "#FFFFFF",
-  blanco: "#FFFFFF",
-  blue: "#007BFF",
-  azul: "#007BFF",
-  green: "#28A745",
-  verde: "#28A745",
-  gray: "#808080",
-  gris: "#808080",
-  gold: "#D4AF37",
-  silver: "#C0C0C0",
-  "space gray": "#4A4A4A",
-};
-
 export default function ShowCart({ open, onClose }) {
   const { items, clearAll } = useCart();
 

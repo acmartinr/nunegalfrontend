@@ -70,7 +70,6 @@ export default function ProductDetails() {
       end.top + end.height / 2 - (start.top + start.height / 2);
 
     // forzar frame
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     clone.offsetWidth;
 
     requestAnimationFrame(() => {
@@ -87,7 +86,6 @@ export default function ProductDetails() {
         if (cartIcon) {
           cartIcon.classList.remove("flash");
           // reflow
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           cartIcon.offsetWidth;
           cartIcon.classList.add("flash");
         }
@@ -137,6 +135,7 @@ export default function ProductDetails() {
       flyToCart();
     } catch (e) {
       showErrorToast("Fallo al agregar al carrito");
+      console.error(e);
     }
   };
 
