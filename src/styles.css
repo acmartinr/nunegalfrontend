@@ -326,9 +326,8 @@ button.primary {
   z-index: 9999;
   border-radius: 12px;
   pointer-events: none;
-  transition: transform 700ms cubic-bezier(.2,.8,.2,1), 
-              opacity 700ms ease, 
-              filter 700ms ease;
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 700ms ease,
+    filter 700ms ease;
   will-change: transform, opacity, filter;
 }
 
@@ -338,9 +337,15 @@ button.primary {
 }
 
 @keyframes cart-bump {
-  0% { transform: scale(1); }
-  20% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Destello breve en el icono de carrito */
@@ -348,7 +353,260 @@ button.primary {
   animation: cart-flash 300ms ease-out;
 }
 @keyframes cart-flash {
-  0% { filter: drop-shadow(0 0 0 rgba(255,43,93,0)); }
-  50% { filter: drop-shadow(0 0 8px rgba(255,43,93,.7)); }
-  100% { filter: drop-shadow(0 0 0 rgba(255,43,93,0)); }
+  0% {
+    filter: drop-shadow(0 0 0 rgba(255, 43, 93, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 43, 93, 0.7));
+  }
+  100% {
+    filter: drop-shadow(0 0 0 rgba(255, 43, 93, 0));
+  }
+}
+
+.hero-banner {
+  width: 100%;
+  height: 200px; /* altura escritorio */
+  overflow: hidden;
+}
+
+/* Contenedor del carrusel de fondo */
+.bg-carousel {
+  position: relative;
+  width: 100%;
+  height: var(--h, 260px);
+  overflow: hidden;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .bg-carousel {
+    height: var(--hm, 140px);
+  }
+}
+
+/* Slide como background cover */
+.bgc-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 60%;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 450ms ease, transform 1200ms ease;
+  will-change: opacity, transform;
+}
+.bgc-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Degradado tipo Amazon (transparente -> oscuro abajo) */
+.bgc-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 45%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+}
+
+/* Flechas laterales */
+.bgc-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #111;
+  font-size: 28px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease, background 0.2s ease, opacity 0.2s ease;
+}
+.bgc-arrow:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+.bgc-arrow:active {
+  transform: translateY(-50%) scale(0.98);
+}
+.bgc-arrow.left {
+  left: 12px;
+}
+.bgc-arrow.right {
+  right: 12px;
+}
+
+@media (max-width: 768px) {
+  .bgc-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+  }
+}
+
+/* Dots */
+.bgc-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+.bgc-dot {
+  width: 8px;
+  height: 8px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+.bgc-dot.active {
+  background: #fff;
+  transform: scale(1.2);
+}
+
+/* --- Layout para superponer las cards encima del carrusel --- */
+.hero-wrap {
+  position: relative;
+}
+.hero-wrap .content {
+  position: relative;
+  z-index: 2;
+  margin-top: -90px; /* superpone el grid sobre el carrusel */
+}
+@media (max-width: 768px) {
+  .hero-wrap .content {
+    margin-top: -60px;
+  }
+}
+
+/* (opcional) sombra a las cards para destacar sobre el fondo */
+.card {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== FOOTER COOL ===== */
+.site-footer {
+  background: radial-gradient(circle at top left, #0e0e0e 0%, #1b1b1b 100%);
+  color: #f5f5f5;
+  margin-top: 80px;
+  padding: 40px 20px 20px;
+  text-align: center;
+  font-family: "Inter", system-ui, sans-serif;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.footer-brand .brand-name {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #ff2b5d; /* rosa vibrante */
+  letter-spacing: 1px;
+}
+
+.footer-brand p {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.footer-links {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #ff2b5d;
+}
+
+.footer-social {
+  display: flex;
+  gap: 18px;
+  font-size: 1.4rem;
+}
+
+.footer-social a {
+  color: #f5f5f5;
+  transition: color 0.25s, transform 0.25s;
+}
+
+.footer-social a:hover {
+  color: #ff2b5d;
+  transform: translateY(-3px);
+}
+
+.footer-bottom {
+  margin-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 14px;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .footer-content {
+    gap: 18px;
+  }
+  .footer-links {
+    gap: 14px;
+    font-size: 0.95rem;
+  }
+}
+
+/* en tu CSS global */
+.cart-count.bump {
+  animation: bump 300ms ease;
+}
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.cart-icon.flash {
+  animation: flash 500ms ease;
+}
+@keyframes flash {
+  0% {
+    filter: none;
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(255, 170, 0, 0.9));
+  }
+  100% {
+    filter: none;
+  }
 }

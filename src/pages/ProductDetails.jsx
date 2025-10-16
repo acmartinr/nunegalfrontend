@@ -11,7 +11,9 @@ import { useCart } from "../context/CartContext.jsx";
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const { setCount, bumpCart } = useCart();
+
+  const { increment, bumpCart, addItemSummary } = useCart();
+
   const [item, setItem] = useState(null);
   const [color, setColor] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -49,16 +51,27 @@ export default function ProductDetails() {
 
     const clone = startEl.cloneNode(true);
     clone.classList.add("flyer");
-    clone.style.left = `${start.left}px`;
-    clone.style.top = `${start.top}px`;
-    clone.style.width = `${start.width}px`;
-    clone.style.height = `${start.height}px`;
+    // aseguremos estilos por si no existe la clase .flyer en tu CSS
+    Object.assign(clone.style, {
+      position: "fixed",
+      left: `${start.left}px`,
+      top: `${start.top}px`,
+      width: `${start.width}px`,
+      height: `${start.height}px`,
+      transition: "transform 500ms ease, opacity 500ms ease, filter 500ms ease",
+      zIndex: 99999,
+      pointerEvents: "none",
+    });
     document.body.appendChild(clone);
 
     const translateX =
       end.left + end.width / 2 - (start.left + start.width / 2);
     const translateY =
       end.top + end.height / 2 - (start.top + start.height / 2);
+
+    // forzar frame
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    clone.offsetWidth;
 
     requestAnimationFrame(() => {
       clone.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.2)`;
@@ -73,7 +86,9 @@ export default function ProductDetails() {
         const cartIcon = endEl.querySelector(".cart-icon");
         if (cartIcon) {
           cartIcon.classList.remove("flash");
-          void cartIcon.offsetWidth;
+          // reflow
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          cartIcon.offsetWidth;
           cartIcon.classList.add("flash");
         }
         bumpCart();
@@ -83,8 +98,10 @@ export default function ProductDetails() {
   };
 
   const onAdd = async () => {
-    // Animación inmediata
-    flyToCart();
+    if (!color || !capacity) {
+      showErrorToast("Selecciona color y almacenamiento");
+      return;
+    }
 
     try {
       const res = await addToCart({
@@ -93,14 +110,26 @@ export default function ProductDetails() {
         storageCode: capacity,
       });
 
-      if (typeof res?.count === "number") {
-        setCount(res.count);
-      } else {
-        // Si tu API no devuelve count, hacemos fallback +1
-        setCount((c) => c + 1);
+      // contador total
+      if (typeof res?.count === "number" && res.count >= 0) {
+        increment(1);
       }
+
+      // resumen (name=marca, model, price, image)
+      addItemSummary({
+        id: String(id),
+        name: item.brand ?? "",
+        model: item.model ?? "",
+        price: Number(item.price) || 0,
+        image:
+          item.imgUrl ||
+          item.image ||
+          "https://via.placeholder.com/400x300?text=Phone",
+        // count: 1 // opcional; por defecto 1
+      });
+
+      flyToCart();
     } catch (e) {
-      // ❌ Error: mostramos toast y NO incrementamos contador
       showErrorToast("Fallo al agregar al carrito");
     }
   };
@@ -240,6 +269,8 @@ export default function ProductDetails() {
               className="primary"
               style={{ cursor: "pointer" }}
               onClick={onAdd}
+              disabled={!color || !capacity}
+              title={!color || !capacity ? "Selecciona opciones" : "Añadir"}
             >
               Añadir a la cesta
             </button>

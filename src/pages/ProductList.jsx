@@ -3,8 +3,27 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import { fetchProducts } from "../services/api.js";
+import BackgroundCarousel from "../components/BackgroundCarousel.jsx";
+
+// 🔹 Importa tus imágenes locales desde /src/assets/
+import banner1 from "../assets/banner.jpg";
+import banner2 from "../assets/banner2.jpg";
+import banner3 from "../assets/banner3.jpg";
+
+// 🔹 Array con tus imágenes locales
+const banners = [banner1, banner2, banner3];
 
 const PAGE_SIZE = 12;
+
+const normalize = (s) =>
+  (s || "")
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // quita acentos
+    .replace(/[^\w\s]/g, " ") // quita signos
+    .replace(/\s+/g, " ") // colapsa espacios
+    .trim()
+    .toLowerCase();
 
 export default function ProductList() {
   const [all, setAll] = useState([]);
@@ -33,13 +52,23 @@ export default function ProductList() {
   }, [query]);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return all;
-    return all.filter(
-      (p) =>
-        (p.brand || "").toLowerCase().includes(q) ||
-        (p.model || "").toLowerCase().includes(q)
-    );
+    const nq = normalize(query);
+    if (!nq) return all;
+
+    // divide la query en tokens: ["samsung","galaxy"]
+    const tokens = nq.split(" ");
+
+    return all.filter((p) => {
+      // Combina campos relevantes en una sola cadena buscable
+      const haystack = normalize(
+        [p.brand, p.model, p.id, p.cpu, p.ram, p.os, p.primaryCamera]
+          .filter(Boolean)
+          .join(" ")
+      );
+
+      // deben aparecer *todas* las palabras de la query (AND)
+      return tokens.every((t) => haystack.includes(t));
+    });
   }, [query, all]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -50,53 +79,63 @@ export default function ProductList() {
   const goTo = (n) => setPage(Math.min(Math.max(1, n), totalPages));
 
   return (
-    <section className="product-list">
-      <SearchBar value={query} onChange={setQuery} />
+    <div className="hero-wrap">
+      {/* 🔹 Carrusel de fondo */}
+      <BackgroundCarousel
+        images={banners}
+        interval={5000}
+        height={260} // alto escritorio
+        heightMobile={140} // alto móvil
+      />
 
-      {loading ? (
-        <p className="loading">Cargando…</p>
-      ) : (
-        <>
-          <div className="grid">
-            {pageItems.map((p) => (
-              <ProductCard
-                key={p.id}
-                item={p}
-                onClick={() => navigate(`/product/${p.id}`)}
-              />
-            ))}
-          </div>
+      {/* 🔹 Contenido superpuesto */}
+      <section className="content-over-hero product-list">
+        <SearchBar value={query} onChange={setQuery} />
 
-          {/* 🔹 Paginación moderna */}
-          <nav className="pagination">
-            <button
-              className="nav-btn"
-              onClick={() => goTo(page - 1)}
-              disabled={page === 1}
-            >
-              ←
-            </button>
+        {loading ? (
+          <p className="loading">Cargando…</p>
+        ) : (
+          <>
+            <div className="grid">
+              {pageItems.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  item={p}
+                  onClick={() => navigate(`/product/${p.id}`)}
+                />
+              ))}
+            </div>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <nav className="pagination">
               <button
-                key={n}
-                onClick={() => goTo(n)}
-                className={`page-btn ${n === page ? "active" : ""}`}
+                className="nav-btn"
+                onClick={() => goTo(page - 1)}
+                disabled={page === 1}
               >
-                {n}
+                ←
               </button>
-            ))}
 
-            <button
-              className="nav-btn"
-              onClick={() => goTo(page + 1)}
-              disabled={page === totalPages}
-            >
-              →
-            </button>
-          </nav>
-        </>
-      )}
-    </section>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                <button
+                  key={n}
+                  onClick={() => goTo(n)}
+                  className={`page-btn ${n === page ? "active" : ""}`}
+                >
+                  {n}
+                </button>
+              ))}
+
+              <button
+                className="nav-btn"
+                onClick={() => goTo(page + 1)}
+                disabled={page === totalPages}
+              >
+                →
+              </button>
+            </nav>
+          </>
+        )}
+      </section>
+    </div>
   );
 }
