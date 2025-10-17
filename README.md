@@ -24,7 +24,7 @@ La app espera un API con estas rutas (configurable con `VITE_API_BASE_URL` en `.
 Ejemplo `.env`:
 
 ```
-VITE_API_BASE_URL=http://localhost:3001
+VITE_API_BASE_URL=http://localhost:5173
 ```
 
 ## Scripts
